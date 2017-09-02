@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nightlife Coordination App</title>
+    <link rel="stylesheet" type="text/css" href="/grid.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <h1>Nightlife Coordination App</h1>
+    <h2>Well, we don't drink beer, but freeCodeCamp made us do this...<br>Hopefully it helps you.</h2>
+    <form method="post" action="/search" id="search-form" >
+      <input name="location" type="text" placeholder="Search for bars in you area">
+      <button id="search" type="button">Search</button>
+    </form>
+    <ul class="list">
+        <% for (i = 0; i < bars.length; i++) {%>
+          <li><%= bars[i] %></li>
+        <% } %>
+    </ul>
+  </body>
+</html>
