@@ -22,7 +22,7 @@ const requireAuth = (req, res, next) => {
 
 //home page
 router.get('/', (req, res) => {
-  res.render('home.ejs', { bars: [] })
+  res.render('home', { bars: [] })
 })
 
 //route handler just for the failure redirect in requireSignin
@@ -31,8 +31,8 @@ router.get('/error', (req, res) => {
 })
 
 //signup page
-router.get('/signup', (req, res) => {
-  res.render('signup')
+router.get('/signup-or-in', (req, res) => {
+  res.render('signup-or-in')
 })
 
 //post request for signup
@@ -46,34 +46,40 @@ router.post('/signup', (req, res) => {
     if (err) return res.render('error', { err: err });
     req.login(user, function(err) {
       if (err) return res.render('error', { err: err })
-      res.render('create')
+      res.render('home', { bars: [] })
     })
   })
 })
 
 
-//signin page
-router.get('/signin', (req, res) => {
-  res.render('signin')
-})
 
 //post request for signin
 router.post('/signin', requireSignin, (req, res) => {
-  res.render('home');
+  res.render('home', { bars: [] });
 })
 
 router.post('/search', (req, res) => {
   //fetch(`https://api.yelp.com/v3/businesses/search?term=bars&location=${req.body.location}`, {
     fetch('https://api.yelp.com/v3/businesses/search?term=bars&location=phoenix', {
     'method': 'GET',
-    'headers': {'access_token': '9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx',
-    'expires_in': 643256054,
-    'token_type': 'Bearer'
-    }
+    'headers': { 'Authorization': 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx' }
   })
-    .then(response => response.json())
-    .then(response => res.send(response))
+    .then((response) => {
+      response.json();
+    })
+    .then((response) => {
+      //response.headers.set('Authorization', 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx');
+      console.log(response);
+      res.send(response);
+      //For each bar, check database for a match. If no match, push object with only name, url, image url, and location into arrayOfBars.
+      //Check for a match in the database, and if not put going as 0, if yes, put going as going.length
+      //res.render('home', { bars: arrayOfBars })
+    })
     .catch(err => console.log('error', err))
+})
+
+router.post('/rsvp/:bar', (req, res) => {
+  Bar.find
 })
 
 //logout route
@@ -81,6 +87,6 @@ router.get('/logout', (req, res) => {
   //log out
   req.logout();
   //redirect to home page
-  res.render('home')
+  res.render('home', { bars: [] })
 })
 module.exports = router;
