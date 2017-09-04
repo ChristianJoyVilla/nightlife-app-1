@@ -63,15 +63,17 @@ router.post('/signin', requireSignin, (req, res) => {
 })
 
 router.post('/search', (req, res) => {
-  fetch(`https://api.yelp.com/v3/businesses/search?term=bars&location=${req.body.location}`, {
+  //fetch(`https://api.yelp.com/v3/businesses/search?term=bars&location=${req.body.location}`, {
+    fetch('https://api.yelp.com/v3/businesses/search?term=bars&location=phoenix', {
     'method': 'GET',
     'headers': {'access_token': '9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx',
     'expires_in': 643256054,
     'token_type': 'Bearer'
     }
   })
-    .then(response => res.send(response.json()))
-
+    .then(response => response.json())
+    .then(response => res.send(response))
+    .catch(err => console.log('error', err))
 })
 
 //logout route
