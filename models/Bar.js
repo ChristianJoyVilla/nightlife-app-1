@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const barSchema = new Schema({
   name: String,
+  yelp_id: String,
   going: Array
 }, { timestamp: true });
 

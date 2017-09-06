@@ -6,6 +6,7 @@ const passport = require('passport')
 const bodyParser = require('body-parser')
 const validator = require('validator')
 const fetch = require('isomorphic-fetch')
+const async = require('async')
 require('../services/passport')
 
 
@@ -59,23 +60,40 @@ router.post('/signin', requireSignin, (req, res) => {
 })
 
 router.post('/search', (req, res) => {
-  //fetch(`https://api.yelp.com/v3/businesses/search?term=bars&location=${req.body.location}`, {
-    fetch('https://api.yelp.com/v3/businesses/search?term=bars&location=phoenix', {
-    'method': 'GET',
-    'headers': { 'Authorization': 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx' }
+  async.waterfall([
+    (next) => {
+      fetch(`https://api.yelp.com/v3/businesses/search?term=bars&location=${req.body.location}`, {
+        'headers': { 'Authorization': 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx' }
+      })
+      .then(response => response.json())
+      .then((response) => {
+          //response.headers.set('Authorization', 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx');
+        console.log(response);
+        res.send(response);
+          //For each bar, check database for a match. If no match, push object with only name, url, image url, and location into arrayOfBars.
+          //Check for a match in the database, and if not put going as 0, if yes, put going as going.length
+          //res.render('home', { bars: arrayOfBars })
+      })
+      .catch(err => console.log('error', err))
+    },
+    (response, next) => {
+      const { businesses } = response;
+      const ids = businesses.map(({ id }) => id);
+      Bar.find({ yelp_id: { $in: ids } }).lean().exec((err, bars) => {
+        if (err) return next(err)
+        next(null, bars)
+      })
+    }
+  ], (err, data) => {
+    if (err) return res.send(err)
+    if (data.length) {
+      res.send(data)
+    } else {
+      res.send('No items in the database')
+    }
+
   })
-    .then((response) => {
-      response.json();
-    })
-    .then((response) => {
-      //response.headers.set('Authorization', 'Bearer 9Q9sxxUVykUTPoSzgPPj_sV_ya5o2-5Fnaj7NDJ7nueKbWWXeEaT2xIjh5MdAxOyFRaKbXVY2umhtAzAj2Dr9rslNXrdZgiTFJHV_kCnBx5FtTRrrlk-WMQeCLGoWXYx');
-      console.log(response);
-      res.send(response);
-      //For each bar, check database for a match. If no match, push object with only name, url, image url, and location into arrayOfBars.
-      //Check for a match in the database, and if not put going as 0, if yes, put going as going.length
-      //res.render('home', { bars: arrayOfBars })
-    })
-    .catch(err => console.log('error', err))
+
 })
 
 router.post('/rsvp/:bar', (req, res) => {
