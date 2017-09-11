@@ -4,19 +4,22 @@
     <title>Nightlife Coordination App</title>
     <link rel="stylesheet" type="text/css" href="/grid.css">
     <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="/queries.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   </head>
   <body>
-    <h1>Nightlife Coordination App</h1>
-    <h2>Well, we don't drink beer, but freeCodeCamp made us do this...<br>Hopefully it helps you.</h2>
-    <form id="search-form" method="post" action="/search">
-      <input name="location" type="text" placeholder="Search for bars in you area">
-      <button id="search" type="submit">Search</button>
-    </form>
+    <header>
+      <a href="/logout" class="logout"><%= logout %></a>
+      <div class="text-box">
+        <h1>Nightlife Coordination App</h1>
+        <h2>Hopefully this helps.</h2>
+        <form id="search-form">
+          <input id="input" name="location" type="text" placeholder="Search for bars in you area">
+          <button id="search" type="submit" class="btn btn-submit">Search</button>
+        </form>
+      </div>
+    </header>
     <ul class="list">
-        <% for (i = 0; i < bars.length; i++) {%>
-          <li><%= bars[i] %></li>
-        <% } %>
     </ul>
     <script src="/app.js"></script>
   </body>

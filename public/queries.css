@@ -1,0 +1,50 @@
+@media only screen and (max-width: 1023px) {
+    body { font-size: 18px; }
+
+}
+
+@media only screen and (max-width: 767px) {
+    body { font-size: 16px; }
+
+    .row,
+    .text-box { padding: 0 4%; }
+    .col {
+        width: 100%;
+        margin: 0;
+    }
+
+
+
+    .header {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+
+
+    .btn-submit,
+    .btn-submit:hover,
+    .btn-submit:active {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .text-box {
+        width: 90%;
+        transform: translate(-50%, -50%);
+    }
+
+    .form {
+      margin: 30px auto;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .list li {
+    padding: 20px;
+  }
+}
