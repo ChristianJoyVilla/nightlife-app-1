@@ -144,7 +144,7 @@ a {
 
 .list-item {
   background-color: #fff;
-  margin: 10px;
+  margin: 10px auto;
 }
 
 .bar-name:link,
